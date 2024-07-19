@@ -1,0 +1,5 @@
+add_subdirectory(fundamentals)
+add_subdirectory(algorithms)
+add_subdirectory(datastructures)
+add_subdirectory(designpatterns)
+add_subdirectory(smartpointers)

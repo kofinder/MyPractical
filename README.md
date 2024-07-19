@@ -1,1 +1,2 @@
-# CxxTutorial
+# Run Command
+* make

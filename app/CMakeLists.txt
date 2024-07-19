@@ -1,5 +1,6 @@
 
 # Executable files
+add_subdirectory(src)
 add_executable(${EXECUTABLE_NAME} main.cpp)
 
 # Linking Libs that you used

@@ -25,21 +25,21 @@ class DoublyLinkedList {
             length = 1;
         }
 
-        void append(int value) {}
+        // void append(int value) {}
 
-        void prepend(int value) {}
+        // void prepend(int value) {}
 
-        Node get(int index) {}
+        // Node get(int index) {}
 
-        bool set(int index, int value) {}
+        // bool set(int index, int value) {}
 
-        bool insert(int index, int value) {}
+        // bool insert(int index, int value) {}
 
-        Node removeFirst() {}
+        // Node removeFirst() {}
 
-        Node removeLast() {}
+        // Node removeLast() {}
 
-        Node remove(int index) {}
+        // Node remove(int index) {}
 
-        void reverse() {}
+        // void reverse() {}
 };

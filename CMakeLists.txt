@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(CxxTutorial VERSION 1.0.0 LANGUAGES C CXX)
 
+set(LIBRARY_NAME Library)
 set(EXECUTABLE_NAME Executable)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
@@ -15,4 +16,6 @@ add_git_submodule(external/spdlog)
 
 add_subdirectory(configured)
 add_subdirectory(external)
+add_subdirectory(tests)
+add_subdirectory(src)
 add_subdirectory(app)

@@ -1,4 +1,4 @@
-all: clean install develop execute
+all: clean install develop validate execute
 
 clean:
 	rm -rf build
@@ -9,6 +9,9 @@ install:
 
 develop:
 	cd build && cmake --build .
+
+validate:
+	cd build/tests && ./unit_tests
 
 execute:
 	cd build/app && ./Executable 

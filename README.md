@@ -2,8 +2,8 @@
 * make
 
 
-# Fundamental Orinciples of OOP
---------------------------------------------------------
+# Fundamental Principles of OOP
+
 **Class** - A blueprint or template that defines the structure (data members) and behavior (methods) of objects.
 
 **Object** - A specific instance of a class, representing a concrete example of the structure defined by that class.
@@ -24,8 +24,8 @@
 
 **Polymorphism** - The ability to treat different object types (that share the same base type) as instances of their common base class, allowing for methods to behave differently based on the object being referenced.
 
-# Keys concept of OOP
-------------------------------------------------------------
+# Keys Concept Of OOP
+
 **Class** - Describes the structure of an object.
 
 **Object** - A specific example (instance) of that structure.

@@ -1,47 +1,32 @@
-struct Node {
-    Node* next;
-    int value;
+#include "stack.hpp"
+using namespace stack;
 
-    Node(int _value) {
-        value = _value;
-        next = nullptr;
+Stack::Stack(int value) {
+    Node* newNode = new Node(value);
+    top = newNode;
+    height = 1;
+}
+
+void Stack::push(int value) {
+    Node* newNode = new Node(value);
+    if(height == 0) {
+        top = newNode;
+    } else {
+        newNode->next = top;
+        top = newNode;
     }
-};
+    height++;
+}
 
+Node* Stack::pop(int value) {
+    if(height == 0) {
+        return nullptr;
+    }
 
-class Stack {
-    private:
-        Node* top;
-        int height;
+    Node* temp = top;
+    top = top->next;
+    temp->next = nullptr;
+    height--;
 
-    public:
-        Stack(int value) {
-            Node* newNode = new Node(value);
-            top = newNode;
-            height = 1;
-        }
-
-        void push(int value) {
-            Node* newNode = new Node(value);
-            if(height == 0) {
-                top = newNode;
-            } else {
-                newNode->next = top;
-                top = newNode;
-            }
-            height++;
-        }
-
-        Node* pop(int value) {
-            if(height == 0) {
-                return nullptr;
-            }
-
-            Node* temp = top;
-            top = top->next;
-            temp->next = nullptr;
-            height--;
-
-            return temp;
-        }
-};
+    return temp;
+}

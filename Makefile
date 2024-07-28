@@ -5,7 +5,7 @@ clean:
 	mkdir build
 
 install:
-	cd build && cmake ..
+	cd build && cmake .. --graphviz=graph.dot && dot -Tpng graph.dot -o graph.png 
 
 develop:
 	cd build && cmake --build .

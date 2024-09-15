@@ -20,8 +20,11 @@ namespace tree {
             Node* root;
 
             BinarySearchTree(): root(nullptr) { }
+
             bool insert(int value);
+
             bool contains(int value);
+            
             int minValue(Node* currentNode);
 
     };

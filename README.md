@@ -1,7 +1,7 @@
 # Learning Resources
-- https://en.cppreference.com/w/
+- https://en.cppreference.com
 - https://github.com/federico-busato/Modern-CPP-Programming
-- https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-introduction
+- https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines
 - https://simplifycpp.org
 
 

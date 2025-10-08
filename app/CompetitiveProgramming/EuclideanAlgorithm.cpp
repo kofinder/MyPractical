@@ -1,13 +1,9 @@
 
-#include <string>
 #include <iostream>
-#include <vector>
 
-
-// bitwise operator
-// bool isPowerOfTwo(int n) {
-//     return n > 0 && (n & (n - 1)) == 0;
-// }
+bool isPowerOfTwo(int n) {
+    return n > 0 && (n & (n - 1)) == 0;
+}
 
 bool isPowerOfTwo(int n) {
     if(n == 1) return true;
@@ -17,11 +13,11 @@ bool isPowerOfTwo(int n) {
     return isPowerOfTwo(n/2);
 }
 
+using namespace std;
+
 int main() {
-   
-    
-    std::cout << isPowerOfTwo(20) << std::endl;
-   
+
+    cout << isPowerOfTwo(20) << endl;
 
     return 0;
 }

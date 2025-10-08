@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 
+
 // Head recursion: work done AFTER recursion
 std::string reverse_head_recursion(const std::string& name) {
 
@@ -49,22 +50,12 @@ void permute(std::string& s, int start, std::vector<std::string>& results) {
 
 
 int main() {
-    /*
-        std::string word = "Jovian";
-        std::cout << "Head recursion: " << reverse_head_recursion(word) << std::endl;
-        std::cout << "Tail recursion: " << reverse_tail_recursion(word) << std::endl;
-    */
 
     std::string word = "Jovian";
-    std::vector<std::string> results;
-    permute(word, 0, results);
     
-    std::cout << "Backtracking (permutations):\n";
-    for (const auto& p : results) {
-        std::cout << p << '\n';
-    }
+    std::cout << "Head recursion: " << reverse_head_recursion(word) << std::endl;
 
-
+    std::cout << "Tail recursion: " << reverse_tail_recursion(word) << std::endl;
 
     return 0;
 }

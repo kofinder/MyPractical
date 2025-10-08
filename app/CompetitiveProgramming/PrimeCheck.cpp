@@ -3,7 +3,41 @@
 using namespace std;
 
 
-// Prime = exactly two factors, cannot be divided evenly by anything else.
+/*
+
+********************************************************************************
+* Prime = exactly two factors, cannot be divided evenly by anything else.
+********************************************************************************
+
+PSEUDOCODE IsPrime(n):
+
+    IF n <= 1 THEN
+        RETURN "Not Prime"
+    END IF
+
+    IF n == 2 OR n == 3 THEN
+        RETURN "Prime"
+    END IF
+
+    IF n MOD 2 == 0 OR n MOD 3 == 0 THEN
+        RETURN "Not Prime"
+    END IF
+
+    i ← 5
+    WHILE i * i <= n DO
+        IF n MOD i == 0 OR n MOD (i + 2) == 0 THEN
+            RETURN "Not Prime"
+        END IF
+
+        i ← i + 6
+    END WHILE
+
+    RETURN "Prime"
+
+END PSEUDOCODE
+
+*/
+
 
 bool isPrimeTailRecursive(int n, int i = 2) {
 
@@ -65,12 +99,14 @@ bool checkPrimeNumber(int n) {
     return true;
 }
 
+
  
 
 int main() {
-
     int number = 3;
     if (isPrimeIteration(number)) cout << number << " is a prime number." << endl;
     else cout << number << " is not a prime number." << endl;
     return 0;
 }
+
+

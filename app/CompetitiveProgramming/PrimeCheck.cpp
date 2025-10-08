@@ -1,8 +1,5 @@
 #include <iostream>
 
-using namespace std;
-
-
 /*
 
 ********************************************************************************
@@ -103,6 +100,7 @@ bool checkPrimeNumber(int n) {
  
 
 int main() {
+    using namespace std;
     int number = 3;
     if (isPrimeIteration(number)) cout << number << " is a prime number." << endl;
     else cout << number << " is not a prime number." << endl;

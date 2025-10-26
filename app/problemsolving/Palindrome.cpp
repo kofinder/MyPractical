@@ -2,7 +2,6 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
-using namespace std;
 
 /*
 
@@ -58,6 +57,8 @@ end PSEUDOCODE
 
 */
 
+using namespace std;
+
 bool isPalindrome_tail_recursion(std::string word, int left = 0, int right = - 1) {
 
     if(right == -1) {
@@ -74,8 +75,7 @@ bool isPalindrome_tail_recursion(std::string word, int left = 0, int right = - 1
 }
 
 bool isPalindrome_head_recursion(std::string word, int left = 0, int right = - 1) {
-
-    if (right == -1) { // first call
+    if (right == -1) {
         string cleanWord = word;
         transform(word.begin(), word.end(), word.begin(), ::tolower);
         word.erase(remove_if(word.begin(), word.end(), ::isspace), word.end());
@@ -84,10 +84,8 @@ bool isPalindrome_head_recursion(std::string word, int left = 0, int right = - 1
 
     if (left >= right) return true;
 
-    // First do recursive call
     bool rest = isPalindrome_head_recursion(word, left + 1, right - 1);
 
-    // Then check current characters
     return rest && (word[left] == word[right]);
 }
 

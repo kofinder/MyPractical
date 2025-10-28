@@ -52,7 +52,8 @@ int fibonacci_tail_recursion(int n, int a = 0, int b = 1) {
 
 
 int main() {
-    using namespace std;
+    using std::cout;
+    using std::endl;    
 
     cout << fibonacci_tail_recursion(10) << endl;
 

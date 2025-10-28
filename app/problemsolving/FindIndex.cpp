@@ -15,7 +15,8 @@ int main() {
 
     int idx = findIndex(items, size, 10);
 
-    using namespace std;
+    using std::cout;
+    using std::endl;    
     cout << "Result Idex of donate Number ===>:" << idx << endl;
 
     return 0;

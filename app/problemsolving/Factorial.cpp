@@ -39,7 +39,8 @@ int factorial_tail_recursion(int n, int accumulator = 1) {
 }
 
 int main() {
-    using namespace std;
+    using std::cout;
+    using std::endl;   
 
     cout << factorial_tail_recursion(5) << endl;
 

@@ -13,11 +13,13 @@ bool isPowerOfTwo(int n) {
     return isPowerOfTwo(n/2);
 }
 
-using namespace std;
 
 int main() {
 
-    cout << isPowerOfTwo(20) << endl;
+    using std::cout;
+    using std::endl;    
+
+    cout << isPowerOfTwo(20) << "\n";
 
     return 0;
 }

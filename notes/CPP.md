@@ -119,8 +119,131 @@
 
 ---
 
-# Processes, Threads, and Services
+
+# ⚙️ Processes, Threads, and Services
+
+## 🧩 Processes in Linux
+- **Lifecycle:**  
+  1. Creation (`fork()`, `exec()`)  
+  2. Execution  
+  3. Termination (`exit()`)
+
+- **Identifiers:**  
+  - **PID:** Unique Process ID.  
+  - **PPID:** Parent Process ID.
+
+- **Remote Procedure Calls (RPCs):**  
+  → Allow processes to execute procedures on remote systems.
+
+---
+
+## 🔗 Inter-Process Communication (IPC) Mechanisms
+
+| Mechanism | Description |
+|------------|-------------|
+| **Pipes / Named Pipes (FIFOs)** | Unidirectional communication between related processes. |
+| **Signals** | Notify processes of system or user events. |
+| **Message Queues** | Exchange structured messages asynchronously. |
+| **Semaphores** | Synchronize access to shared resources. |
+| **Shared Memory** | Fastest IPC — direct memory sharing between processes. |
+| **Sockets** | Network-based IPC, allows communication between machines. |
+
+### ✅ IPC Key Qualities
+- **Reliability:** Messages and synchronization remain consistent.  
+- **Scalability:** Efficient across many processes or nodes.  
+- **Flexibility:** Supports various communication models (local/remote).  
+- **Use Case:** Choose based on data size, speed, and communication pattern.
+
+---
+
+## 🧵 Threads in Concurrency
+
+- **Thread Lifecycle:**  
+  1. **Creation** → Thread is started.  
+  2. **Execution** → Performs assigned task.  
+  3. **Synchronization** → Coordinates with other threads.  
+  4. **Termination** → Ends and releases resources.
+
+---
+
+## 🔒 Synchronization Primitives
+
+|-------------------------------|---------------------------------------------------|
+| Primitive                     |               Purpose                             |
+|-------------------------------|---------------------------------------------------|
+| **Mutex (Mutual Exclusion):** | Locks a critical section to one thread at a time. |
+| **Semaphore:**                | Controls access count to shared resources.        |
+| **Condition Variable:**       | Allows threads to wait for specific conditions.   |
+|-------------------------------|---------------------------------------------------|
+
+### Additional Primitives:
+- **Barriers:** All threads wait until each reaches a certain point.  
+- **Read–Write Locks:** Multiple readers or one writer at a time.  
+- **Spin Locks:** Busy-wait locks for short critical sections.
+
+---
 
 
+# ⚠️ Common Problems in Multithreading
+
+| Problem | Description |
+|----------|--------------|
+| **Race Condition** | Two or more threads access shared data simultaneously, causing unpredictable results. |
+| **Deadlock** | Two or more threads wait on each other indefinitely for resources. |
+| **Starvation** | A thread never gets CPU time or access to resources due to unfair scheduling. |
+| **Livelock** | Threads keep reacting to each other and make no progress. |
+
+---
+
+# 🧰 Techniques for Managing Thread Challenges
+
+1. **Synchronization Mechanisms:**  
+   Use mutexes, semaphores, and condition variables to protect shared resources.
+
+2. **Deadlock Prevention & Detection:**  
+   - Follow lock ordering.  
+   - Use timeouts to detect stalled threads.  
+   - Apply algorithms like wait-for graphs.
+
+3. **Thread Scheduling:**  
+   Ensure fair CPU allocation to prevent starvation.
+
+---
+
+# 🚀 Strategies for Effective Thread Management
+
+- **Minimize Shared State:**  
+  Reduce dependency between threads to avoid conflicts.
+
+- **Lock Hierarchy:**  
+  Always acquire locks in a consistent global order.
+
+- **Timeouts:**  
+  Avoid indefinite waiting when acquiring locks.
+
+- **Thread Pools:**  
+  Reuse threads for better performance and resource management.
+
+- **Synchronization Primitives:**  
+  Use appropriate locking tools for thread safety.
+
+- **Testing & Debugging:**  
+  Use tools like thread sanitizers or debuggers to detect race conditions and deadlocks.
+
+- **Scalability & Performance Considerations:**  
+  Balance between concurrency and system overhead.
+
+- **Communication & Collaboration:**  
+  Use message passing, queues, or events for clean inter-thread communication.
+
+---
+
+✅ **Summary**
+- Processes → Independent, isolated memory.  
+- Threads → Lightweight, shared memory.  
+- IPC → Connects processes.  
+- Synchronization → Coordinates threads safely.  
+- Metrics → Measure and improve parallel performance.  
+- Thread Management → Prevent race conditions, deadlocks, and inefficiency.
 
 

@@ -33,3 +33,6 @@
 
 build
 .gitmodules
+
+# Technical interview collections that could be useful for a Principal Software Engineer.
+tech_interview

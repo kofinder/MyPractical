@@ -1,4 +1,9 @@
 ## Parallel Programming Paradigms
+  > Parallel programming is a computing technique. allows multiple tasks or computations to run simultaneously, splitting work across processors, cores, or threads to solve problems faster than sequential execution.
+
+## Execution Models
+  - **Synchronization:** Tasks are executed one after another, in sequence. Each task waits for the previous one to finish.
+  - **Asynchronous:**  Tasks can start and continue running while others are still executing. Tasks don’t wait — they can run in parallel or be scheduled to finish later.
 
 ### 1. Data Parallelism
 - **Definition:** Same operation applied concurrently on elements of a dataset.
@@ -168,13 +173,12 @@
 
 ## 🔒 Synchronization Primitives
 
-|-------------------------------|---------------------------------------------------|
 | Primitive                     |               Purpose                             |
 |-------------------------------|---------------------------------------------------|
 | **Mutex (Mutual Exclusion):** | Locks a critical section to one thread at a time. |
 | **Semaphore:**                | Controls access count to shared resources.        |
 | **Condition Variable:**       | Allows threads to wait for specific conditions.   |
-|-------------------------------|---------------------------------------------------|
+
 
 ### Additional Primitives:
 - **Barriers:** All threads wait until each reaches a certain point.  

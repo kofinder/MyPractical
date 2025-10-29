@@ -1,5 +1,5 @@
 ## Parallel Programming Paradigms
-  > Parallel programming is a computing technique. allows multiple tasks or computations to run simultaneously, splitting work across processors, cores, or threads to solve problems faster than sequential execution.
+  > Parallel programming is a computing technique. Its allows multiple tasks or computations to run simultaneously, splitting work across processors, cores, or threads to solve problems faster than sequential execution.
 
 ## Execution Models
   - **Synchronization:** Tasks are executed one after another, in sequence. Each task waits for the previous one to finish.

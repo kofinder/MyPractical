@@ -49,18 +49,3 @@
 - **Example:** `std::unique_ptr` automatically releases memory.
 
 ---
-
-
-# MEMORY LAYOUTS
-+------------------------+
-| Stack (local variables)|
-+------------------------+
-| Heap (dynamic memory)  |
-+------------------------+
-| BSS (uninitialized data)|
-+------------------------+
-| Data (initialized globals)|
-+------------------------+
-| Text (code instructions) |
-+------------------------+
-

@@ -242,6 +242,55 @@
 
 ---
 
+| Feature                            | `std::thread` | `std::jthread`             |
+| ---------------------------------- | ------------- | -------------------------- |
+| Introduced in                      | C++11         | C++20                      |
+| Must manually join/detach          | ✅ Yes         | ❌ No (joins automatically) |
+| Auto-join on destruction           | ❌             | ✅                          |
+| Supports stop request/cancellation | ❌             | ✅ (via `stop_token`)       |
+| Moveable                           | ✅             | ✅                          |
+| Copyable                           | ❌             | ❌                          |
+
+---
+
+# Thread Synchronization with Locks
+* Race conditions – what they are and how they can happen
+* Data race-free mechanism: Only one person can write at a time, or each has their own notebook → safe and consistent results.
+* Mutual exclusion as a synchronization mechanism and how it is implemented in C++ by std::mutex
+* Generic lock management
+* What condition variables are and how to use them with mutexes
+* Implementing a fully synchronized queue using std::mutex and std::condition_ variable
+* The new synchronization primitives introduced with C++20 – semaphores, barriers, and latches
+
+
+# Resource Contention in Multithreading
+
+## Definition
+- **Resource contention** occurs when **two or more threads or processes compete for the same limited resource** at the same time.
+- Resources can include:
+  - CPU
+  - Memory
+  - Disk
+  - Network
+  - Shared data structures (variables, files, I/O devices)
+
+---
+
+## Why It Happens
+- Multiple threads need access to the same resource simultaneously.
+- Only one thread can safely use the resource at a time.
+- Without proper management, contention can cause:
+  - **Performance degradation**
+  - **Deadlocks**
+  - **Data races**
+  - **Starvation**
+
+# Consequences of Resource Contention
+- Performance loss: Threads spend time waiting for resources.
+- Deadlocks: Threads wait indefinitely for resources held by each other.
+- Starvation: Some threads never get access to resources.
+- Reduced throughput: Overall program runs slower due to waiting.---
+
 ✅ **Summary**
 - Processes → Independent, isolated memory.  
 - Threads → Lightweight, shared memory.  
@@ -250,4 +299,59 @@
 - Metrics → Measure and improve parallel performance.  
 - Thread Management → Prevent race conditions, deadlocks, and inefficiency.
 
+✅ **Summary**
+- std::this_thread::sleep_for(1s) is used to simulate a task taking time and show concurrency clearly.
+- It is not required for std::jthread or RAII; it’s purely illustrative.
 
+
+✅ **Summary**
+* Data race: simultaneous unsynchronized access with at least one write → undefined behavior.
+* Data race-free mechanism: ensures safe access to shared data → prevents undefined behavior.
+*C++ tools: mutexes, locks, atomics, condition variables, RAII threads.
+
+✅ **Summary**
+* std::this_thread::yield() → voluntarily gives up CPU without terminating.
+* Useful for fair scheduling, avoiding busy-waiting, and cooperative multitasking.
+* Often replaced by condition variables or proper synchronization in production code.
+---
+
+# Yielding Thread Execution in C++
+
+## Definition
+- **Yielding**: A thread voluntarily gives up its current CPU time slice to allow other threads to run.
+- The thread **does not terminate**; it can resume later when the scheduler picks it.
+
+---
+
+## How to Yield in C++
+
+```cpp
+#include <thread>
+std::this_thread::yield(); // hint to the scheduler
+
+
+## 1️⃣ What is Thread Cancellation?
+
+- **Thread cancellation**: Stopping a thread before it naturally finishes its task.
+- **Important:** In C++, you **cannot forcefully terminate a thread safely**.
+- Instead, **cooperative cancellation** is used: threads check a **signal/flag** and exit gracefully.
+
+---
+
+## 2️⃣ Cooperative Cancellation Mechanism
+
+- **Flag-based approach:**
+  - Use an `std::atomic_bool` or a similar shared variable.
+  - Thread periodically checks this flag.
+  - If the flag indicates stop, the thread exits after completing its current work.
+
+```cpp
+std::atomic_bool running{true};
+
+std::jthread t([&]() {
+    while (running.load()) {
+        // Do work here
+    }
+});
+
+running.store(false); // Signal the thread to stop

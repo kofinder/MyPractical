@@ -44,8 +44,17 @@
 - **Key point:** Helps in low-level memory manipulations but must preserve UB rules.
 
 ### 10. RAII and C++’s Special Member Functions
-- **RAII (Resource Acquisition Is Initialization):** Manage resources via object lifetime.
+- **RAII (Resource Acquisition Is Initialization):** Manage resources via object lifetime. 
 - **Special member functions:** Constructors, destructors, copy/move constructors, copy/move assignment.
 - **Example:** `std::unique_ptr` automatically releases memory.
 
+## 11. Resource Acquisition is Initialization (RAII)
+- Acquire resources (memory, file handles, locks, etc.) in a constructor, and release them in the destructor
+- When an object is created, it acquires the resource.
+- When the object goes out of scope, its destructor automatically releases the resource
+- **Keypoint:**
+    * Avoids memory leaks and resource leaks.
+    * Provides exception safety automatically.
+    * Makes code simpler and more reliable.
+    
 ---

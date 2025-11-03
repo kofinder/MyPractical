@@ -29,38 +29,33 @@
 
 using namespace std::chrono_literals;
 
-std::exception_ptr capture_expection;
-std::mutex mtx;
+thread_local int val = 0;
 
-void simpleFunc() {
-    try {
-        std::this_thread::sleep_for(1s);
-        throw std::runtime_error("Error in func used within thread");
-    } catch(...) {
-        std::lock_guard<std::mutex> lock(mtx);
-        capture_expection = std::current_exception();
-    }
+void setValue(int value) { val = value; }
+
+void print() { sync_cout << val << " "; }
+
+void multiplyByTwo(int arg) {
+    setValue(arg);
+    val *= 2;
+    print();
 }
+
 
 int main() {
 
     sync_cout << "Starting main threads...\n";
-    std::thread t(simpleFunc);
 
-    while (!capture_expection) {
-        std::this_thread::sleep_for(2s);
-        sync_cout << "In main threads...\n";
-    }
-    
-    try {
-        std::rethrow_exception(capture_expection);
-    } catch(const std::exception ex) {
-        std::cerr << "Exception caught in main thread" << ex.what() << std::endl;
-    }
+    val = 1;
+    std::thread t1(multiplyByTwo,  1);
+    std::thread t2(multiplyByTwo,  2);
+    std::thread t3(multiplyByTwo,  3);
 
-    t.join();
-    
-    sync_cout << "Main thread is exiting...\n";
+    t1.join();
+    t2.join();
+    t3.join();
+
+    sync_cout << "\n Main thread is exiting...\n";
 
     return 0; 
 }

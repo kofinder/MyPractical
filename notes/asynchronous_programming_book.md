@@ -323,35 +323,140 @@
 
 ---
 
-## How to Yield in C++
+## 🧩 How to Yield in C++
 
+### 📘 Definition
+- **`std::this_thread::yield()`**: A function that **suggests to the OS scheduler** that the current thread is willing to **pause execution** and let other threads run.
+
+### 🧠 Key Points
+- It’s a **non-blocking hint**, not a guarantee — the scheduler may or may not switch threads.
+- Useful to **improve fairness** when multiple threads are competing for CPU.
+- Helps avoid **busy-wait loops** consuming 100% CPU.
+
+### ✅ Syntax
 ```cpp
 #include <thread>
-std::this_thread::yield(); // hint to the scheduler
+std::this_thread::yield();
+```
 
+### 📍 Use Cases
+- Inside **spinlocks** or **polling loops**.
+- When waiting for a condition that’s likely to change soon.
+- When a thread performs background or low-priority tasks.
+
+---
 
 ## 1️⃣ What is Thread Cancellation?
 
-- **Thread cancellation**: Stopping a thread before it naturally finishes its task.
-- **Important:** In C++, you **cannot forcefully terminate a thread safely**.
-- Instead, **cooperative cancellation** is used: threads check a **signal/flag** and exit gracefully.
+### 📘 Definition
+- **Thread cancellation** means **stopping a thread before it finishes** its execution naturally.
+- **C++ does not provide safe, forceful thread termination**.
+- Instead, **cooperative cancellation** is used — threads periodically check a signal (flag) and **exit gracefully** when requested.
 
 ---
 
 ## 2️⃣ Cooperative Cancellation Mechanism
 
-- **Flag-based approach:**
-  - Use an `std::atomic_bool` or a similar shared variable.
-  - Thread periodically checks this flag.
-  - If the flag indicates stop, the thread exits after completing its current work.
+### ⚙️ How It Works
+- Use a **shared atomic flag** (e.g., `std::atomic_bool`) to indicate whether the thread should continue running.
+- The thread periodically checks this flag within its main loop.
+- When the flag is set to `false`, the thread completes any pending work and exits cleanly.
 
+### ✅ Example
 ```cpp
+#include <atomic>
+#include <thread>
+
 std::atomic_bool running{true};
 
-std::jthread t([&]() {
+std::jthread worker([&]() {
     while (running.load()) {
-        // Do work here
+        // Perform work
+        std::this_thread::yield(); // optional: prevent busy waiting
     }
 });
 
-running.store(false); // Signal the thread to stop
+// Request cancellation
+running.store(false);
+```
+
+### 🧠 Notes
+- Use **`std::jthread` (C++20)** when possible — it supports **automatic joining** and **cancellation tokens**.
+- Avoid `std::terminate()` or `pthread_cancel()` equivalents — they can cause **resource leaks** or **undefined behavior**.
+
+---
+
+# 🧵 Thread-Local Storage (TLS) — C++ Interview Notes
+
+## 🔹 Definition
+- Each thread has its **own independent instance** of a variable.
+- Declared using the **`thread_local`** keyword (**C++11**).
+- Behaves like a global or static variable, but **isolated per thread**.
+
+---
+
+## 🔹 Purpose / Why Use
+- Store **thread-specific data** that should not be shared.
+- Avoid **synchronization primitives** (mutexes, locks).
+- Maintain **thread-specific state** such as logs, buffers, or temporary data.
+
+---
+
+## 🔹 Characteristics
+
+| Property | Description |
+|-----------|--------------|
+| **Keyword** | `thread_local` |
+| **Scope** | Thread |
+| **Lifetime** | Created on first use by a thread; destroyed when the thread exits |
+| **Sharing** | Not shared across threads |
+| **Synchronization** | Not required |
+| **Introduced In** | C++11 |
+
+---
+
+## 🔹 Where It Can Be Used
+- **Global / namespace scope**  
+- **Static class members**  
+- **Function-local static variables**
+
+---
+
+## 🔹 Advantages
+- **Thread-safe by design** — no locks needed.
+- **High performance** for thread-specific data.
+- Simplifies design of **multi-threaded systems**.
+
+---
+
+## 🔹 Limitations
+- **Higher memory usage** (one instance per thread).
+- **Initialization order** across translation units is unspecified.
+- **Not suitable** for shared data between threads.
+
+---
+
+## 🔹 Common Use Cases
+- Thread-specific loggers.
+- Per-thread random number generators.
+- Thread-local caches or buffers.
+- Thread-specific error or status tracking.
+
+---
+
+## 🧩 Quick Recall
+
+> **Keyword:** `thread_local`  
+> **Purpose:** Per-thread variable instance  
+> **Lifetime:** Until thread exits  
+> **Benefit:** No synchronization required, safe concurrent access  
+
+---
+
+# 🧭 Summary
+
+| Concept | Purpose | Key Feature | Introduced |
+|----------|----------|--------------|-------------|
+| **`std::this_thread::yield()`** | Yield CPU to other threads | Non-blocking scheduler hint | C++11 |
+| **Thread Cancellation** | Gracefully stop a thread | Cooperative flag-based mechanism | C++11+ |
+| **Thread-Local Storage** | Per-thread variable instances | `thread_local` keyword | C++11 |

@@ -1,10 +1,3 @@
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <sstream>
-#include <string>
-
-
 /**
  * --------------------------------------------------------------------------------
  * Credit / Remark:
@@ -22,6 +15,13 @@
  *
  * --------------------------------------------------------------------------------
 */
+
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <sstream>
+#include <string>
+
 
 void funcByValue(const std::string& str, int number) {
     std::ostringstream oss;

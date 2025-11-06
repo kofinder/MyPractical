@@ -1,14 +1,9 @@
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <syncstream> // suprise
-
 /**
  * --------------------------------------------------------------------------------
  * Credit / Remark:
  * This source code was inspired by C++ asynchronous programming books and online
  * examples. Portions of the code (e.g., thread examples, lambda usage) are adapted
- * for learning and practice purposes.
+ * for learning an/d practice purposes.
  *
  * Author of this adaptation: Ko Thein
  * Purpose: Practice and demonstration of C++ std::thread, lambdas, function objects,
@@ -21,8 +16,13 @@
  * --------------------------------------------------------------------------------
 */
 
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <syncstream>
 
-#define sync_cout std::osyncstream(std::cout) // suprise
+
+#define sync_cout std::osyncstream(std::cout) 
 
 int main() {
     const int repeat_count = 100;

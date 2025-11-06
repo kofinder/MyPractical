@@ -1,9 +1,3 @@
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <syncstream>
-#include <chrono>
-
 /**
  * --------------------------------------------------------------------------------
  * Credit / Remark:
@@ -22,6 +16,11 @@
  * --------------------------------------------------------------------------------
 */
 
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <syncstream>
+#include <chrono>
 
 // Define a macro for synchronized console output.
 // std::osyncstream (C++20) ensures that multiple threads printing to std::cout

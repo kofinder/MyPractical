@@ -1,9 +1,4 @@
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <random>
-#include <mutex>
-#include <chrono>
+
 
 /**
  * --------------------------------------------------------------------------------
@@ -43,6 +38,12 @@
 // In this example, we use the first technique — “returning” a result 
 // through a variable passed by reference.
 
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <random>
+#include <mutex>
+#include <chrono>
 
 using namespace std::chrono_literals;
 

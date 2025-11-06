@@ -1,6 +1,3 @@
-#include <iostream>
-#include <thread>
-
 /**
  * --------------------------------------------------------------------------------
  * Race Condition Demonstration
@@ -16,6 +13,9 @@
  *      - std::atomic for atomic operations
  * --------------------------------------------------------------------------------
 */
+
+#include <iostream>
+#include <thread>
 
 // Shared variable between threads
 int counter = 0;

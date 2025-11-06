@@ -460,3 +460,138 @@ running.store(false);
 | **`std::this_thread::yield()`** | Yield CPU to other threads | Non-blocking scheduler hint | C++11 |
 | **Thread Cancellation** | Gracefully stop a thread | Cooperative flag-based mechanism | C++11+ |
 | **Thread-Local Storage** | Per-thread variable instances | `thread_local` keyword | C++11 |
+
+
+----
+
+
+## CH3: Thread Synchronization with Locks
+
+Concurrent memory write operations to the same memory address from multiple threads require synchronization mechanisms to prevent data races and ensure data integrity. Atomic operations are typically implemented using hardware instructions that are indivisible.
+
+### 🔹 Mutual Exclusion
+Mutual exclusion ensures that multiple threads or processes do not simultaneously access a shared resource such as a variable, critical section, file, or network connection. It is crucial for preventing race conditions.
+
+| Mutex Type                  | Access Type  | Recursive | Timeout |
+|------------------------------|-------------|-----------|--------|
+| std::mutex                  | EXCLUSIVE   | NO        | NO     |
+| std::recursive_mutex        | EXCLUSIVE   | YES       | NO     |
+| std::shared_mutex           | EXCLUSIVE (1 writer) / SHARED (N readers) | NO | NO |
+| std::timed_mutex            | EXCLUSIVE   | NO        | YES    |
+| std::recursive_timed_mutex  | EXCLUSIVE   | YES       | YES    |
+| std::shared_timed_mutex     | EXCLUSIVE (1 writer) / SHARED (N readers) | NO | YES |
+
+---
+
+### std::mutex
+The `std::mutex` class is a synchronization primitive used to protect shared data from simultaneous access by multiple threads. Key features:
+- Exclusive, non-recursive ownership semantics.
+- A thread owns the mutex from `lock()` or `try_lock()` until `unlock()` is called.
+- Non-recursive: a thread cannot re-lock a mutex it already owns; doing so is undefined behavior.
+- Exclusive: if a thread owns a mutex, other threads are blocked or `try_lock()` returns false.
+
+**Methods:**
+- `lock()`: Blocks until mutex is acquired.
+- `try_lock()`: Non-blocking attempt to acquire the mutex.
+- `unlock()`: Releases the mutex.
+
+---
+
+### std::recursive_mutex
+Allows a thread to acquire the same mutex multiple times (recursive acquisition). Key points:
+- Ownership count must be released the same number of times.
+- Maximum recursive acquisitions are implementation-defined.
+- Interface is identical to `std::mutex`.
+
+---
+
+### std::shared_mutex
+Supports multiple access levels for readers-writer scenarios:
+- **Shared access**: Multiple threads can acquire shared ownership concurrently (readers).
+- **Exclusive access**: Only one thread can acquire exclusive ownership (writer).
+- Methods: `lock()`, `try_lock()`, `unlock()` for exclusive access, and `lock_shared()`, `try_lock_shared()`, `unlock_shared()` for shared access.
+- Useful when many threads read data and only one thread writes.
+
+---
+
+
+### Timed Mutex Types
+Timed mutexes allow a thread to attempt acquiring a lock for a limited period of time.
+- `std::timed_mutex`, `std::recursive_timed_mutex`, `std::shared_timed_mutex` are similar to their non-timed counterparts but provide additional methods:
+  - `try_lock_for(duration)`: Tries to lock the mutex, blocking up to the specified duration. Returns true if successful, false if timeout occurs.
+  - `try_lock_until(time_point)`: Tries to lock the mutex until the specified point in time or until the mutex is locked.
+- These are useful when a thread should not be blocked indefinitely waiting for a lock.
+
+---
+
+
+### Problems When Using Locks
+When using a single mutex properly, writing correct multithreaded code is relatively straightforward. However, when multiple locks are required, code complexity increases significantly. Two common problems when using multiple locks are:
+- **Deadlock**: Occurs when two or more threads are waiting indefinitely for each other to release locks.
+- **Livelock**: Occurs when threads continuously change state in response to each other without making progress.
+----
+
+
+### Generic Lock Management
+C++ provides wrapper classes to simplify mutex usage and ensure safe acquisition and release using RAII principles. Key classes:
+
+| Lock Manager Class | Supported Mutex Types | Mutexes Managed |
+|------------------|--------------------|----------------|
+| std::lock_guard   | All                | 1              |
+| std::scoped_lock  | All                | Zero or more   |
+| std::unique_lock  | All                | 1              |
+| std::shared_lock  | std::shared_mutex, std::shared_timed_mutex | 1 |
+
+#### std::lock_guard
+- RAII wrapper that automatically locks the mutex on construction and unlocks on destruction.
+- Simplifies exception-safe locking.
+
+#### std::unique_lock
+- Provides more flexibility than `std::lock_guard`.
+- Supports deferred locking (`std::defer_lock`), adoption of an already-locked mutex (`std::adopt_lock`), and try-locking (`std::try_to_lock`).
+- Allows explicit `lock()` and `unlock()` calls.
+
+#### std::scoped_lock
+- RAII wrapper that can manage zero or more mutexes.
+- Locks multiple mutexes in the order they are provided to prevent deadlocks.
+
+#### std::shared_lock
+- Used with `std::shared_mutex` and `std::shared_timed_mutex`.
+- Acquires and releases locks in shared mode (multiple readers).
+- Supports deferred locking and lock ownership transfer.
+
+---
+
+### Condition Variables
+Condition variables allow threads to communicate and wait for notifications. They are always associated with a mutex and enable efficient waiting until a certain condition is met.
+
+---
+
+
+### Implementing a Multithreaded Safe Queue
+A multithread-safe queue allows multiple producer and consumer threads to add and remove elements concurrently.
+- **Single-producer-single-consumer (SPSC)** queues are simpler to synchronize.
+- A fixed-size queue can be implemented as a template class using `std::vector<T>`.
+- Ensures packets or data items are processed in order, even with multiple threads.
+
+---
+
+### Semaphores
+C++20 introduces semaphores as new synchronization primitives:
+- **Binary semaphore**: Two states (0 and 1), can implement mutual exclusion. Unlike mutexes, any thread can signal the semaphore.
+- **Counting semaphore**: Counter >1, controls access to multiple instances of a shared resource.
+- Useful for signaling rather than exclusive locking.
+
+---
+
+### Barriers and Latches
+C++20 introduces **barriers** and **latches** to coordinate threads:
+
+#### std::latch
+- Allows threads to wait until a specific number of operations are completed.
+- Single-use; cannot be reset.
+
+#### std::barrier
+- Synchronizes a group of threads at a specific point.
+- Reusable; resets after all threads reach the barrier.
+- Use `std::latch` for one-time synchronization points and `std::barrier` for repeated phased synchronization.

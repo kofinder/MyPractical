@@ -1,9 +1,20 @@
 ## Parallel Programming Paradigms
   > Parallel programming is a computing technique. Its allows multiple tasks or computations to run simultaneously, splitting work across processors, cores, or threads to solve problems faster than sequential execution.
 
+# FOUNDATION
+- process : Process is a memory container, live on Memory, Not run CPU, By itself, a process does nothing
+- thread : Threads are the execution units, AKA execution path. Scheduled by the OS. Run on the CPU core.
+
 ## Execution Models
-  - **Synchronization:** Tasks are executed one after another, in sequence. Each task waits for the previous one to finish.
-  - **Asynchronous:**  Tasks can start and continue running while others are still executing. Tasks don’t wait — they can run in parallel or be scheduled to finish later.
+- **Synchronous Execution:**  
+  Tasks are executed one after another in a defined order.  
+  Each task waits for the previous task to finish before starting (blocking behavior).
+
+- **Asynchronous Execution:**  
+  Tasks can start and continue running without waiting for other tasks to finish.  
+  Tasks may overlap in time, run in parallel, or be scheduled to complete later (non-blocking behavior).
+
+> **Note:** Synchronization is not an execution model. It refers to coordination mechanisms (locks, mutexes, semaphores, barriers) used to ensure correctness when tasks execute concurrently.
 
 ### 1. Data Parallelism
 - **Definition:** Same operation applied concurrently on elements of a dataset.

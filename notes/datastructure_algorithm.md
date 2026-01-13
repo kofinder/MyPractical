@@ -118,7 +118,6 @@
 - Measures memory required for execution, including:  
   - **Input space**: Memory for variables, input arrays  
   - **Auxiliary space**: Temporary memory used for computation (recursion, temporary arrays)
-
 ---
 
 # **Common Asymptotic Notations**
@@ -127,7 +126,6 @@
 | **O(f(n))** | Big O   | Upper bound → Worst-case   |
 | **Ω(f(n))** | Omega   | Lower bound → Best-case    |
 | **Θ(f(n))** | Theta   | Tight bound → Average-case |
-
 ---
 
 # **Rules for Simplifying Complexity**

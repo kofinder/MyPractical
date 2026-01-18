@@ -4,8 +4,6 @@
 # FOUNDATION
 - process : Process is a memory container, live on Memory, Not run CPU, By itself, a process does nothing
 - thread : Threads are the execution units, AKA execution path. Scheduled by the OS. Run on the CPU core.
-
-## Execution Models
 - **Synchronous Execution:**  
   Tasks are executed one after another in a defined order.  
   Each task waits for the previous task to finish before starting (blocking behavior).

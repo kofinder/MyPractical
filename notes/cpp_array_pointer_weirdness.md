@@ -107,3 +107,4 @@ std::cout << *ip; // may print 67305985 on little-endian machines
 💡 **Takeaway:**
 Most C++ array/pointer quirks boil down to **memory layout + pointer arithmetic + array decay**. Once you see memory as a contiguous sequence of bytes with pointer math, many quirks stop being "magic."
 
+

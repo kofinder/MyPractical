@@ -606,3 +606,424 @@ C++20 introduces **barriers** and **latches** to coordinate threads:
 - Synchronizes a group of threads at a specific point.
 - Reusable; resets after all threads reach the barrier.
 - Use `std::latch` for one-time synchronization points and `std::barrier` for repeated phased synchronization.
+------
+
+# CH5: Atomic Operations
+Atomic operations are indivisible operations (from Greek ἄτομος — indivisible)
+  - Executes as a single, indivisible step
+  - Cannot be interrupted or observed halfway by another thread
+  - Prevents data races when multiple threads access shared data
+  
+### Purpose
+- Prevent **data races** in multithreaded programs
+- Provide **safe concurrent access** to shared variables
+- Defined precisely by the **C++11 memory model**
+
+### Advantages
+- No locks required
+- Lower overhead than mutexes
+- Avoid context switches
+- Enable **lock-free** and **wait-free** algorithms
+- Ideal for:
+  - Counters
+  - Flags
+  - Simple shared state
+
+### Disadvantages
+- Harder to understand and reason about
+- Easy to introduce subtle bugs (especially with memory ordering)
+- Not suitable for complex multi-variable invariants
+- More difficult to debug and maintain than mutex-based code
+
+
+### Use Atomic Operations When:
+- **Multiple threads share mutable state**
+  - Atomic operations can synchronize access without locks
+  - May offer better performance than mutexes (but not guaranteed)
+
+- **Synchronization is fine-grained**
+  - Suitable for simple data such as:
+    - Integers
+    - Pointers
+    - Other intrinsic C++ types
+  - Often more efficient than locking for small shared variables
+
+- **Performance is critical**
+  - Reduce thread context switches
+  - Lower overhead compared to locks
+  - Useful in low-latency systems
+  - Always **profile your code** to confirm performance gains
+
+---
+
+### Use Locks When:
+- **Protected data is coarse-grained**
+  - Large objects or data structures
+  - Objects larger than ~8 bytes on modern CPUs
+
+- **Performance is not the main concern**
+  - Locks are simpler to write, read, and maintain
+  - In some cases, locks can outperform atomics
+
+- **You want to avoid low-level complexity**
+  - Efficient use of atomics requires deep understanding of:
+    - Memory ordering
+    - Hardware behavior
+    - C++ memory model
+
+---
+
+### Key Takeaways
+- Atomic operations are powerful but complex
+- Locks are simpler and sufficient for most applications
+- High-performance systems (e.g., low-latency or high-frequency trading) often rely on atomics
+- Most applications work well using traditional locking mechanisms
+
+---
+
+## Blocking vs Non-Blocking Data Structures
+
+### Blocking Data Structures
+- Use **locks** (e.g., mutexes, condition variables) for synchronization
+- Threads may be **blocked by the operating system**
+- Threads wait until a lock becomes available
+- Simpler to design and reason about
+- Can suffer from:
+  - Context switches
+  - Priority inversion
+  - Deadlocks (if used incorrectly)
+
+---
+
+### Non-Blocking Data Structures
+- Do **not use locks** for synchronization
+- Threads are never blocked by the operating system
+- Progress is achieved using **atomic operations**
+- Most (but not all) non-blocking data structures are **lock-free**
+
+---
+
+### Lock-Free Definition
+A data structure or algorithm is **lock-free** if:
+- Each synchronized operation completes in a **finite number of steps**
+- No thread can be forced to wait indefinitely
+- System-wide progress is guaranteed, even if some threads are delayed or fail
+
+---
+
+### Key Distinction
+- **Blocking** → threads wait for locks
+- **Non-blocking** → threads retry using atomic operations
+- **Lock-free ≠ wait-free**
+  - Lock-free guarantees progress for *some* thread
+  - Wait-free guarantees progress for *every* thread
+
+---
+
+
+
+## Types of Non-Blocking / Lock-Free Data Structures
+### Obstruction-Free
+- A thread completes its operation in a **bounded number of steps**
+- Progress is guaranteed **only if all other threads are suspended**
+- Weakest non-blocking guarantee
+
+---
+
+### Lock-Free
+- A thread completes its operation in a **bounded number of steps**
+- Multiple threads may operate concurrently
+- Guarantees **system-wide progress**
+- At least one thread always makes progress
+
+---
+
+### Wait-Free
+- **All threads** complete their operations in a **bounded number of steps**
+- Strongest non-blocking guarantee
+- Guarantees fairness and progress for every thread
+
+---
+
+## Why Use Lock-Free Data Structures?
+
+### Maximum Concurrency
+- Allow multiple threads to operate simultaneously
+- Lock-free: at least one thread progresses
+- Wait-free: all threads progress
+- Locks allow only one thread to proceed at a time
+
+---
+
+### No Deadlocks
+- No locks involved
+- Deadlocks are impossible by design
+
+---
+
+### Performance and Low Latency
+- Avoid blocking and thread suspension
+- Reduce context switches caused by locks
+- Essential for low-latency systems (e.g., high-performance networking, trading systems)
+
+---
+
+## Important Notes
+- Lock-free programming is **complex and error-prone**
+- Should only be used when clearly necessary
+- Most applications work well with **blocking data structures**
+- Always weigh complexity against performance benefits
+---
+
+## Memory Access Order — Summary Notes
+
+### Why Memory Ordering Matters
+- Atomicity alone is **not always enough**
+- In multithreaded programs, operations may need to occur in a **specific order**
+- Compilers and CPUs may **reorder instructions** for performance
+- The **C++ memory model** allows programmers to explicitly specify ordering constraints
+
+---
+
+## Memory Ordering Options in C++
+
+### 1. Relaxed Ordering
+- `std::memory_order_relaxed`
+- Guarantees **atomicity only**
+- No ordering or synchronization between threads
+- Fastest, but hardest to reason about
+
+---
+
+### 2. Acquire–Release Ordering
+- `std::memory_order_acquire`
+- `std::memory_order_release`
+- `std::memory_order_acq_rel`
+- `std::memory_order_consume`
+- Used to establish **synchronization between threads**
+- Commonly used in producer–consumer patterns
+
+---
+
+### 3. Sequential Consistency
+- `std::memory_order_seq_cst`
+- Strongest and default ordering
+- All threads observe atomic operations in the **same global order**
+- Easiest to understand and reason about
+
+---
+
+## C++ Memory Model and CPU Architectures
+
+### Abstract Machine
+- C++ defines an **abstract memory model**
+- Ensures portability across CPUs
+- Actual behavior depends on hardware support
+
+---
+
+### Intel x64 Architecture (Strong Ordering / TSO)
+- Uses **Total Store Ordering (TSO)**
+- Key properties (single processor):
+  - Reads not reordered with reads
+  - Writes not reordered with writes
+  - Writes not reordered with older reads
+  - Reads may be reordered with older writes (different locations)
+  - Atomic (locked) instructions prevent reordering
+
+- Multi-processor guarantees:
+  - Writes from a processor observed in order
+  - Atomic instructions are totally ordered
+  - Memory ordering obeys causality
+
+- Sequential consistency is **cheap** on x64
+
+---
+
+### ARM Architecture (Weak Ordering)
+- Supports **Weak Ordering (WO)**
+- Reads and writes can be freely reordered
+- Writes may not become visible to all threads at the same time
+- Allows higher performance but increases complexity
+
+---
+
+## Key Observations
+- More relaxed ordering → harder to reason about
+- Atomicity is **always guaranteed**, regardless of memory order
+- Correct synchronization becomes more difficult with weaker ordering
+
+---
+
+## Enforcing Ordering with Atomics
+
+### Atomic Operations Provide:
+- **Happens-before** relationships
+- **Synchronizes-with** relationships (between atomic operations only)
+
+---
+
+## Sequential Consistency Defined by Leslie Lamport (1979)
+  - Program behaves as if:
+    All operations occur in a single global order
+    Each thread’s operations appear in program order
+  - Specified in C++ using:
+    std::memory_order_seq_cst
+    Default and safest memory ordering
+
+---
+
+# Asynchronous Programming with Promises, Futures, and Coroutines — Summary Notes
+
+## Overview
+- **Promises and futures** are core building blocks for **asynchronous programming**
+- They manage the result of a task that will complete **in the future**
+- Commonly used with **threads** and asynchronous execution
+- Introduced in **C++11**
+- Defined in the `<future>` header
+
+---
+
+## Futures and Promises
+
+### Future (`std::future`)
+- Represents a **result that is not yet available**
+- Acts as the **consumer** of an asynchronous result
+- Can:
+  - Wait for the result
+  - Retrieve the result
+  - Receive exceptions
+- A future can retrieve its result **only once**
+
+---
+
+### Promise (`std::promise`)
+- Acts as the **producer** of the result
+- Sets a value or exception into a shared state
+- Associated with exactly one future
+
+#### Promise Operations
+- **Make ready**
+  - Stores a value or exception
+  - Marks the shared state as ready
+  - Unblocks waiting futures
+
+- **Release**
+  - Releases its reference to the shared state
+  - Shared state is destroyed when no references remain
+
+- **Abandon**
+  - Occurs if the promise is destroyed without setting a value
+  - Stores `std::future_error` with code `std::future_errc::broken_promise`
+
+---
+
+## Producer–Consumer Relationship
+- `std::promise` + `std::future` form a **one-shot communication channel**
+- One producer → one consumer
+- Used to pass:
+  - Values
+  - `void`
+  - Exceptions
+
+---
+
+## Waiting for Results
+
+### Blocking Calls
+- `future.get()`  
+  - Blocks until result is available
+  - Retrieves value or throws exception
+
+- `future.wait()`  
+  - Blocks until the shared state is ready
+
+---
+
+## Future Status
+
+- Checked using:
+  ```cpp
+  future.wait_for(...)
+  future.wait_until(...)
+  ```
+
+### Possible Status Values
+- `std::future_status::ready`
+- `std::future_status::timeout`
+- `std::future_status::deferred`
+
+---
+
+## Future Errors and Error Codes
+
+- Errors are represented by `std::future_error`
+- Common error codes:
+  - `std::future_errc::broken_promise`
+  - `std::future_errc::no_state`
+  - `std::future_errc::future_already_retrieved`
+  - `std::future_errc::promise_already_satisfied`
+
+---
+
+## Shared Futures
+
+### `std::shared_future`
+- Allows **multiple consumers**
+- The result can be accessed **multiple times**
+- Created by:
+  - Calling `future.share()`
+
+### Differences from `std::future`
+| `std::future` | `std::shared_future` |
+|--------------|---------------------|
+| Single consumer | Multiple consumers |
+| Result retrieved once | Result retrieved multiple times |
+| Move-only | Copyable |
+
+---
+
+## Packaged Tasks
+
+### `std::packaged_task`
+- Wraps a **callable object** (function, lambda)
+- Automatically connects the callable to a future
+- Used when:
+  - You want to decouple task execution from result retrieval
+  - Integrating with thread pools
+
+---
+
+## Benefits of Promises and Futures
+- Clear separation of execution and result consumption
+- Built-in exception propagation
+- No shared mutable state
+- Safer than raw threads
+
+---
+
+## Drawbacks of Promises and Futures
+- One-shot communication (except shared futures)
+- Blocking calls can reduce responsiveness
+- Verbose compared to coroutines
+- Less flexible for complex async chains
+
+---
+
+## Real-Life Use Cases
+- Asynchronous file or network operations
+- Background computations
+- Thread pool task execution
+- Producer–consumer communication
+- Error-safe result passing between threads
+
+---
+
+## Key Takeaways
+- Futures represent results not yet available
+- Promises provide those results
+- Shared futures enable multiple consumers
+- Packaged tasks connect functions to futures
+- Foundations of modern C++ async programming
+----
+
